@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>언행심리 마스터 — WAP Diagnostic System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0d0b;
+    --paper: #f4f0e8;
+    --paper-warm: #ede8dc;
+    --accent: #8b2e0f;
+    --accent-soft: #c2502a;
+    --gold: #b8860b;
+    --muted: #6b6356;
+    --line: rgba(14,13,11,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    padding: 80px 60px 80px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-right {
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-right::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(139,46,15,0.25) 0%, transparent 65%);
+  }
+
+  /* Concentric circles SVG decoration */
+  .hero-circle-art {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    opacity: 0.15;
+    animation: slowRotate 60s linear infinite;
+  }
+  @keyframes slowRotate { to { transform: rotate(360deg); } }
+
+  .hero-chinese {
+    font-family: 'IM Fell English', serif;
+    font-size: clamp(120px, 14vw, 200px);
+    color: rgba(255,255,255,0.06);
+    position: absolute;
+    font-style: italic;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    user-select: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+  }
+
+  .hero-quote {
+    color: rgba(255,255,255,0.5);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s ease forwards;
+  }
+  .eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(36px, 4.5vw, 62px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s ease forwards;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 420px;
+    line-height: 1.9;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s ease forwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s ease forwards;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 32px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+  .btn-primary svg { flex-shrink: 0; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+    padding: 14px 0;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--accent); border-color: var(--accent); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── STAT BAR ─── */
+  .stat-bar {
+    background: var(--accent);
+    color: var(--paper);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
+  }
+  .stat-item {
+    padding: 36px 20px;
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'IM Fell English', serif;
+    font-size: 40px;
+    font-style: italic;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    opacity: 0.8;
+    font-weight: 400;
+  }
+
+  /* ─── SECTIONS ─── */
+  .section {
+    padding: 100px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 64px;
+  }
+  .section-num {
+    font-family: 'IM Fell English', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+  .section-rule {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--line);
+    margin-top: 20px;
+  }
+
+  /* ─── ABOUT ─── */
+  .about-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-main p {
+    font-size: 16px;
+    line-height: 1.95;
+    color: #2a2520;
+    margin-bottom: 24px;
+  }
+  .about-main p:first-child::first-letter {
+    font-family: 'IM Fell English', serif;
+    font-size: 64px;
+    font-style: italic;
+    float: left;
+    line-height: 0.75;
+    margin-right: 8px;
+    margin-top: 8px;
+    color: var(--accent);
+  }
+  .about-aside {
+    border-left: 3px solid var(--accent);
+    padding-left: 36px;
+    margin-top: 8px;
+  }
+  .about-aside blockquote {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+  .about-aside cite {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    font-style: normal;
+    display: block;
+  }
+
+  /* ─── PURPOSE CARDS ─── */
+  .purpose-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border: 1px solid var(--line);
+  }
+  .purpose-card {
+    padding: 36px 28px;
+    border-right: 1px solid var(--line);
+    position: relative;
+    transition: background 0.25s;
+  }
+  .purpose-card:last-child { border-right: none; }
+  .purpose-card:hover { background: var(--paper-warm); }
+  .purpose-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 20px;
+    color: var(--accent);
+  }
+  .purpose-card h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .purpose-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* ─── USAGE AREAS ─── */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+  }
+  .usage-cell {
+    background: var(--paper);
+    padding: 44px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .usage-cell:hover { background: var(--ink); }
+  .usage-cell:hover .usage-label,
+  .usage-cell:hover .usage-text { color: var(--paper); }
+  .usage-cell:hover .usage-num { color: rgba(255,255,255,0.1); }
+  .usage-num {
+    font-family: 'IM Fell English', serif;
+    font-size: 80px;
+    font-style: italic;
+    color: rgba(14,13,11,0.05);
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    line-height: 1;
+    transition: color 0.3s;
+  }
+  .usage-label {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--ink);
+    transition: color 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+  .usage-text {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.85;
+    transition: color 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── EFFECTS ─── */
+  .effects-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    counter-reset: effect;
+  }
+  .effect-item {
+    padding: 40px 48px 40px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 24px;
+    align-items: start;
+    counter-increment: effect;
+  }
+  .effect-item:nth-child(odd) { padding-right: 64px; border-right: 1px solid var(--line); }
+  .effect-item:nth-child(even) { padding-left: 64px; padding-right: 0; }
+  .effect-item:nth-last-child(-n+2) { border-bottom: none; }
+  .effect-counter {
+    font-family: 'IM Fell English', serif;
+    font-size: 36px;
+    font-style: italic;
+    color: rgba(139,46,15,0.2);
+    line-height: 1;
+    padding-top: 4px;
+  }
+  .effect-counter::before { content: counter(effect, decimal-leading-zero); }
+  .effect-content h4 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .effect-content p {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.85;
+  }
+
+  /* ─── DIVIDER ─── */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ─── CTA SECTION ─── */
+  .cta-section {
+    background: var(--ink);
+    padding: 100px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: 'WAP';
+    position: absolute;
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 280px;
+    color: rgba(255,255,255,0.03);
+    right: -20px;
+    bottom: -40px;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+  }
+  .cta-left h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(28px, 3.5vw, 46px);
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .cta-left h2 em {
+    color: var(--accent-soft);
+    font-style: normal;
+  }
+  .cta-left p {
+    color: rgba(244,240,232,0.55);
+    font-size: 14px;
+    line-height: 1.9;
+    max-width: 380px;
+  }
+  .cta-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .cta-link-card {
+    border: 1px solid rgba(244,240,232,0.15);
+    padding: 28px 32px;
+    text-decoration: none;
+    transition: border-color 0.25s, background 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-link-card:hover {
+    border-color: var(--accent-soft);
+    background: rgba(194,80,42,0.08);
+  }
+  .cta-link-label {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent-soft);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .cta-link-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--paper);
+    line-height: 1.3;
+  }
+  .cta-link-sub {
+    font-size: 12px;
+    color: rgba(244,240,232,0.4);
+    margin-top: 4px;
+    word-break: break-all;
+  }
+  .cta-arrow {
+    color: rgba(244,240,232,0.3);
+    flex-shrink: 0;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .cta-link-card:hover .cta-arrow {
+    color: var(--accent-soft);
+    transform: translateX(4px);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #080706;
+    padding: 40px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(244,240,232,0.4);
+    letter-spacing: 0.05em;
+  }
+  .footer-copy {
+    font-size: 11px;
+    color: rgba(244,240,232,0.2);
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-right { display: none; }
+    .hero-left { padding: 80px 40px; }
+    .section { padding: 70px 40px; }
+    .about-body { grid-template-columns: 1fr; gap: 48px; }
+    .purpose-grid { grid-template-columns: repeat(2, 1fr); }
+    .purpose-card { border-bottom: 1px solid var(--line); }
+    .usage-grid { grid-template-columns: 1fr; }
+    .effects-list { grid-template-columns: 1fr; }
+    .effect-item { grid-column: 1 !important; border-right: none !important; padding-left: 0 !important; padding-right: 0 !important; }
+    .cta-section { grid-template-columns: 1fr; padding: 70px 40px; gap: 48px; }
+    footer { padding: 32px 40px; flex-direction: column; gap: 12px; text-align: center; }
+    .stat-bar { grid-template-columns: 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  }
+
+  @media (max-width: 640px) {
+    .hero-left { padding: 60px 24px; }
+    .section { padding: 60px 24px; }
+    .purpose-grid { grid-template-columns: 1fr; }
+    .section-header { grid-template-columns: 1fr; }
+    .cta-section { padding: 60px 24px; }
+    footer { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="eyebrow">Words · Action · Psychology</p>
+    <h1>언행심리<br><em>마스터</em></h1>
+    <p class="hero-desc">
+      인간의 말과 행동 속에 반복적으로 드러나는 심리 패턴을 분석하여,<br>
+      그 사람의 본질적 성향과 신뢰 가능성을 진단합니다.
+    </p>
+    <div class="hero-cta">
+      <a href="https://wapmaster-murex.vercel.app" target="_blank" class="btn-primary">
+        진단 시작하기
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </a>
+      <a href="#about" class="btn-secondary">시스템 소개 보기</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <svg class="hero-circle-art" viewBox="0 0 520 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="260" cy="260" r="250" stroke="white" stroke-width="1"/>
+      <circle cx="260" cy="260" r="200" stroke="white" stroke-width="1"/>
+      <circle cx="260" cy="260" r="150" stroke="white" stroke-width="1"/>
+      <circle cx="260" cy="260" r="100" stroke="white" stroke-width="1"/>
+      <circle cx="260" cy="260" r="50" stroke="white" stroke-width="1"/>
+      <line x1="10" y1="260" x2="510" y2="260" stroke="white" stroke-width="0.5"/>
+      <line x1="260" y1="10" x2="260" y2="510" stroke="white" stroke-width="0.5"/>
+      <line x1="83" y1="83" x2="437" y2="437" stroke="white" stroke-width="0.5"/>
+      <line x1="437" y1="83" x2="83" y2="437" stroke="white" stroke-width="0.5"/>
+    </svg>
+    <div class="hero-chinese">WAP</div>
+    <p class="hero-quote">言行不一 — 말과 행동이 일치하지 않을 때, 진실이 드러난다</p>
+  </div>
+</section>
+
+<!-- ═══════════════════ STAT BAR ═══════════════════ -->
+<div class="stat-bar">
+  <div class="stat-item">
+    <div class="stat-num">5</div>
+    <div class="stat-label">핵심 활용 영역</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">WAP</div>
+    <div class="stat-label">독자 개발 진단 시스템</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">5</div>
+    <div class="stat-label">기대 효과</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ABOUT ═══════════════════ -->
+<div id="about">
+<div class="section">
+  <div class="section-header reveal">
+    <span class="section-num">01</span>
+    <h2 class="section-title">시스템 소개</h2>
+    <div class="section-rule"></div>
+  </div>
+  <div class="about-body">
+    <div class="about-main reveal">
+      <p>자체 개발한 언행 심리(Words-Action-Psychology) 진단 시스템은 인간의 말과 행동 속에 반복적으로 드러나는 심리 패턴과 무의식적 특성을 분석하여, 그 사람의 본질적 성향, 기질, 위기 대응 방식, 인간관계 스타일, 신뢰 가능성 등을 해석하고 예측할 수 있도록 설계된 혁신적인 진단 도구입니다.</p>
+      <p>단순한 성격 유형 분류를 넘어, 실제 생활에서의 언행 기반으로 심리적 진실성과 위험성까지 평가할 수 있는 것이 특징입니다. 이는 특히 타인에 대한 오판을 줄이고, 보다 신중한 인간관계를 구축하는 데 실질적인 도움을 줍니다.</p>
+    </div>
+    <div class="about-aside reveal">
+      <blockquote>공인의 공개된 발언·행동 기록, 혹은 개인이 직접 제공하는 관찰 자료를 바탕으로 현재 국면과 향후 흐름을 추론합니다.</blockquote>
+      <cite>— 언행심리 마스터 진단 원칙</cite>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ PURPOSE ═══════════════════ -->
+<div class="section">
+  <div class="section-header reveal">
+    <span class="section-num">02</span>
+    <h2 class="section-title">주요 목적</h2>
+    <div class="section-rule"></div>
+  </div>
+  <div class="purpose-grid reveal">
+    <div class="purpose-card">
+      <svg class="purpose-icon" viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="16" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="18" cy="18" r="6" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="18" y1="2" x2="18" y2="10" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="18" y1="26" x2="18" y2="34" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="2" y1="18" x2="10" y2="18" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="26" y1="18" x2="34" y2="18" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <h3>심리 구조 파악</h3>
+      <p>타인의 말과 행동에 숨겨진 심리 구조를 체계적으로 파악합니다</p>
+    </div>
+    <div class="purpose-card">
+      <svg class="purpose-icon" viewBox="0 0 36 36" fill="none">
+        <path d="M6 12 L18 6 L30 12 L30 24 L18 30 L6 24 Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M18 6 L18 30" stroke="currentColor" stroke-width="1"/>
+        <path d="M6 12 L30 24" stroke="currentColor" stroke-width="1"/>
+        <path d="M30 12 L6 24" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <h3>언행 불일치 탐지</h3>
+      <p>언행 불일치 또는 조작의 징후를 정밀하게 탐지합니다</p>
+    </div>
+    <div class="purpose-card">
+      <svg class="purpose-icon" viewBox="0 0 36 36" fill="none">
+        <rect x="4" y="4" width="28" height="28" rx="2" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M12 18 L16 22 L24 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <h3>신뢰 관계 기반 마련</h3>
+      <p>신뢰할 수 있는 인간관계의 실질적 기반을 마련합니다</p>
+    </div>
+    <div class="purpose-card">
+      <svg class="purpose-icon" viewBox="0 0 36 36" fill="none">
+        <path d="M18 4 L18 10 M18 26 L18 32 M4 18 L10 18 M26 18 L32 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="18" cy="18" r="8" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M18 14 L18 20 M15 18 L21 18" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <h3>자기 보호</h3>
+      <p>사회적 사기, 감정적 조종, 불균형한 관계에서 자신을 보호합니다</p>
+    </div>
+    <div class="purpose-card">
+      <svg class="purpose-icon" viewBox="0 0 36 36" fill="none">
+        <path d="M8 28 L8 16 L18 8 L28 16 L28 28 Z" stroke="currentColor" stroke-width="1.5"/>
+        <rect x="14" y="20" width="8" height="8" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <h3>공공인물 평가</h3>
+      <p>지도자·정치인·공직자 등 공공인물에 대한 실질적 평가 도구로 활용합니다</p>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ USAGE ═══════════════════ -->
+<div class="section">
+  <div class="section-header reveal">
+    <span class="section-num">03</span>
+    <h2 class="section-title">활용 영역</h2>
+    <div class="section-rule"></div>
+  </div>
+  <div class="usage-grid reveal">
+    <div class="usage-cell">
+      <div class="usage-num">01</div>
+      <div class="usage-label">개인</div>
+      <p class="usage-text">타인을 보는 눈을 기르고, 인간관계 속 리스크를 사전에 예방합니다</p>
+    </div>
+    <div class="usage-cell">
+      <div class="usage-num">02</div>
+      <div class="usage-label">커뮤니티</div>
+      <p class="usage-text">신뢰 기반 소통, 팀 구성원의 심리적 특성을 체계적으로 파악합니다</p>
+    </div>
+    <div class="usage-cell">
+      <div class="usage-num">03</div>
+      <div class="usage-label">정치 / 사회</div>
+      <p class="usage-text">공직자·지도자의 실질적 언행 진단 및 투표 판단의 근거로 활용합니다</p>
+    </div>
+    <div class="usage-cell">
+      <div class="usage-num">04</div>
+      <div class="usage-label">심리상담 / 코칭</div>
+      <p class="usage-text">문제 인식 초기단계에서 구조적 진단을 보조하는 전문가 도구입니다</p>
+    </div>
+    <div class="usage-cell">
+      <div class="usage-num">05</div>
+      <div class="usage-label">교육 / 양육</div>
+      <p class="usage-text">자녀의 언행을 통한 내면 이해 및 지도 방향 설정에 활용합니다</p>
+    </div>
+    <div class="usage-cell" style="border: none;"></div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════════ EFFECTS ═══════════════════ -->
+<div class="section">
+  <div class="section-header reveal">
+    <span class="section-num">04</span>
+    <h2 class="section-title">기대 효과</h2>
+    <div class="section-rule"></div>
+  </div>
+  <div class="effects-list reveal">
+    <div class="effect-item">
+      <div class="effect-counter"></div>
+      <div class="effect-content">
+        <h4>'진짜 의미'를 파악하는 눈</h4>
+        <p>말과 행동 사이의 진짜 의미를 파악하는 통찰력을 기르게 됩니다</p>
+      </div>
+    </div>
+    <div class="effect-item">
+      <div class="effect-counter"></div>
+      <div class="effect-content">
+        <h4>심리적 자율성과 안정감</h4>
+        <p>불필요한 인간관계에서 벗어나 심리적 자율성과 안정감이 향상됩니다</p>
+      </div>
+    </div>
+    <div class="effect-item">
+      <div class="effect-counter"></div>
+      <div class="effect-content">
+        <h4>객관적 근거 기반 판단</h4>
+        <p>관계에 대한 주관적 감정이 아닌 객관적 근거에 기반한 판단이 가능해집니다</p>
+      </div>
+    </div>
+    <div class="effect-item">
+      <div class="effect-counter"></div>
+      <div class="effect-content">
+        <h4>사전 예방적 자기 보호</h4>
+        <p>사기·조작·심리적 폭력으로부터 자신을 사전 예방적으로 보호합니다</p>
+      </div>
+    </div>
+    <div class="effect-item">
+      <div class="effect-counter"></div>
+      <div class="effect-content">
+        <h4>현실적 판단 도구</h4>
+        <p>더 나은 인간관계, 협업, 사회적 판단을 위한 현실적인 도구로 활용 가능합니다</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CTA ═══════════════════ -->
+<div class="cta-section">
+  <div class="cta-left reveal">
+    <h2>지금 바로<br><em>진단을 시작하세요</em></h2>
+    <p>공인의 공개된 발언·행동 기록, 또는 개인이 직접 제공하는 관찰 자료를 바탕으로 현재 국면과 향후 흐름을 추론합니다. 진단보고서가 필요하신 경우 이메일로 문의 바랍니다.</p>
+  </div>
+  <div class="cta-right reveal">
+    <a href="https://wapmaster-murex.vercel.app" target="_blank" class="cta-link-card">
+      <div>
+        <div class="cta-link-label">온라인 진단</div>
+        <div class="cta-link-title">언행심리 진단하기</div>
+        <div class="cta-link-sub">wapmaster-murex.vercel.app</div>
+      </div>
+      <svg class="cta-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </a>
+    <a href="mailto:wapmaster.sys@gmail.com" class="cta-link-card">
+      <div>
+        <div class="cta-link-label">진단 보고서 문의</div>
+        <div class="cta-link-title">이메일로 문의하기</div>
+        <div class="cta-link-sub">wapmaster.sys@gmail.com</div>
+      </div>
+      <svg class="cta-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <div class="footer-logo">언행심리 마스터 — WAP Diagnostic System</div>
+  <div class="footer-copy">Words · Action · Psychology</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
