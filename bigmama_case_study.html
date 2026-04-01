@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인간분석 사례연구 | 빅마마 이혜정 — 자기객관화 부재의 파국</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,700&display=swap');
+
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --accent: #8b1a1a;
+    --accent2: #c8861a;
+    --muted: #7a6e5f;
+    --light: #ede7d9;
+    --border: #c8b89a;
+    --warn: #6b2d0a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    line-height: 1.9;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(200,134,26,0.04) 40px, rgba(200,134,26,0.04) 41px
+    );
+  }
+  .series-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+  }
+  .main-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.6rem, 5vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 0.8rem;
+  }
+  .main-title em {
+    color: var(--accent2);
+    font-style: normal;
+  }
+  .subtitle {
+    font-size: 0.85rem;
+    color: #b8a88a;
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+  .author-badge {
+    display: inline-block;
+    border: 1px solid var(--accent2);
+    padding: 0.4rem 1.2rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--accent2);
+    border-radius: 2px;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ── PURPOSE BOX ── */
+  .purpose-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem 2.5rem;
+    margin: 3rem 0;
+    border-left: 4px solid var(--accent2);
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    line-height: 2;
+  }
+  .purpose-box strong { color: var(--accent2); }
+
+  /* ── SECTION HEADERS ── */
+  .chapter {
+    margin: 3.5rem 0 2rem;
+  }
+  .chapter-num {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .chapter h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+    font-weight: 900;
+    line-height: 1.35;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.8rem;
+  }
+  .chapter h2 .point {
+    color: var(--accent);
+  }
+
+  /* ── PROFILE CARD ── */
+  .profile-card {
+    background: var(--light);
+    border: 1px solid var(--border);
+    padding: 1.8rem 2rem;
+    margin: 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+  .profile-card .full {
+    grid-column: 1 / -1;
+  }
+  .profile-item label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 0.2rem;
+    font-weight: 500;
+  }
+  .profile-item span {
+    font-size: 0.92rem;
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  @media (max-width: 480px) {
+    .profile-card { grid-template-columns: 1fr; }
+    .profile-card .full { grid-column: 1; }
+  }
+
+  /* ── DIAGNOSIS BLOCKS ── */
+  .diag-item {
+    border-left: 3px solid var(--accent);
+    padding: 1.2rem 1.5rem;
+    margin: 1.8rem 0;
+    background: white;
+    box-shadow: 2px 2px 0 var(--border);
+  }
+  .diag-item h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .diag-item h3 .num {
+    background: var(--accent);
+    color: white;
+    font-size: 0.7rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-family: 'Noto Sans KR', sans-serif;
+    flex-shrink: 0;
+  }
+  .diag-item p {
+    font-size: 0.9rem;
+    line-height: 1.9;
+    color: #2a2018;
+  }
+  .diag-item .evidence {
+    margin-top: 0.8rem;
+    padding: 0.7rem 1rem;
+    background: var(--light);
+    border-left: 2px solid var(--accent2);
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.8;
+  }
+  .diag-item .evidence::before {
+    content: '📌 실제 사례: ';
+    font-style: normal;
+    font-weight: 500;
+    color: var(--accent2);
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    margin: 2rem 0;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.2rem;
+    background: white;
+    border: 1px solid var(--border);
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.7rem;
+    top: 1.2rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    background: var(--accent);
+    border-radius: 50%;
+    border: 2px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .timeline-item h4 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    color: var(--accent);
+  }
+  .timeline-item p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* ── QUOTE BLOCK ── */
+  .blockquote {
+    margin: 2rem 0;
+    padding: 1.5rem 2rem;
+    border: 1px solid var(--border);
+    background: var(--light);
+    position: relative;
+  }
+  .blockquote::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--accent2);
+    opacity: 0.3;
+    position: absolute;
+    top: -1rem;
+    left: 1rem;
+    line-height: 1;
+  }
+  .blockquote p {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1rem;
+    line-height: 2;
+    position: relative;
+    z-index: 1;
+  }
+  .blockquote cite {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.8rem;
+    font-style: normal;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── TABLE ── */
+  .diag-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.87rem;
+  }
+  .diag-table thead tr {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .diag-table th {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-size: 0.82rem;
+  }
+  .diag-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.8;
+  }
+  .diag-table tr:nth-child(even) td { background: var(--light); }
+  .status-bad { color: var(--accent); font-weight: 700; }
+  .status-key { color: var(--accent2); font-weight: 700; }
+
+  /* ── CHECKLIST ── */
+  .checklist {
+    background: white;
+    border: 2px solid var(--ink);
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  .checklist h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .checklist h3 span { color: var(--accent); }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-box {
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid var(--accent);
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+  .check-score {
+    margin-top: 1.2rem;
+    padding: 1rem;
+    background: var(--light);
+    font-size: 0.82rem;
+    line-height: 1.9;
+  }
+  .check-score strong { color: var(--accent); }
+
+  /* ── PRESCRIPTION ── */
+  .prescription {
+    background: #0f1a0f;
+    color: #d4e8c2;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+    border: 1px solid #2a4a2a;
+  }
+  .prescription h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    color: #8fc87a;
+    letter-spacing: 0.1em;
+  }
+  .rx-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.87rem;
+    line-height: 1.9;
+    align-items: flex-start;
+  }
+  .rx-num {
+    background: #2a4a2a;
+    color: #8fc87a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  /* ── WARNING BOX ── */
+  .warning-box {
+    background: #2a0a0a;
+    color: #f0c8c8;
+    border: 1px solid #8b1a1a;
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    font-size: 0.88rem;
+    line-height: 2;
+  }
+  .warning-box .warn-title {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #e88080;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: #7a6e5f;
+    text-align: center;
+    padding: 3rem 2rem;
+    margin-top: 5rem;
+    font-size: 0.78rem;
+    line-height: 2;
+  }
+  footer strong { color: var(--accent2); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0;
+    color: var(--border);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── PRINT / MEDIA ── */
+  @media print {
+    body { background: white; }
+    header { background: #1a1208 !important; -webkit-print-color-adjust: exact; }
+  }
+
+  /* ── ANIMATIONS ── */
+  .diag-item, .timeline-item, .checklist, .prescription {
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="series-label">인간분석 사례연구 시리즈 · 제1호</div>
+  <h1 class="main-title">자기객관화가 안 되면<br><em>벌어지는 일들</em></h1>
+  <div class="subtitle">빅마마 이혜정 편 — 관계 파국의 해부</div>
+  <div class="author-badge">대한민국 1호 언행심리 마스터 분석</div>
+</header>
+
+<!-- BODY -->
+<div class="container">
+
+  <!-- PURPOSE -->
+  <div class="purpose-box">
+    이 사례분석의 목적은 특정 개인을 비난하는 데 있지 않습니다.<br>
+    <strong>우리 사회가 안고 있는 '자기객관화 부재'가 불러오는 파국</strong>을 최소화하기 위해,
+    실제 사례를 통해 그 패턴을 낱낱이 해부합니다.<br>
+    지금 이 증상이 보이거나, 앞으로 벌어질 조짐이 있는 모든 분께 이 글이 거울이 되기를 바랍니다.
+  </div>
+
+  <!-- PROFILE -->
+  <div class="chapter">
+    <span class="chapter-num">Chapter 01</span>
+    <h2>대상 프로필 — <span class="point">누구인가</span></h2>
+  </div>
+
+  <div class="profile-card">
+    <div class="profile-item">
+      <label>인물</label>
+      <span>빅마마 이혜정</span>
+    </div>
+    <div class="profile-item">
+      <label>직업</label>
+      <span>요리연구가 · 방송인</span>
+    </div>
+    <div class="profile-item">
+      <label>가족관계</label>
+      <span>이혼 (전 남편), 아들, 딸</span>
+    </div>
+    <div class="profile-item">
+      <label>핵심 키워드</label>
+      <span>자기객관화 부재 · 관계 단절 반복</span>
+    </div>
+    <div class="profile-item full">
+      <label>분석 근거</label>
+      <span>본인 출연 방송 언행 및 공개된 유튜브 콘텐츠, 무당 상담 영상 등 공개 자료</span>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="chapter">
+    <span class="chapter-num">Chapter 02</span>
+    <h2>관계 파국의 <span class="point">연대기</span></h2>
+  </div>
+
+  <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.5rem;">
+    모든 관계에서 동일한 패턴이 반복된다. 공통 변수는 단 하나 — <strong style="color:var(--accent)">본인</strong>이다.
+  </p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <h4>남편과의 이혼</h4>
+      <p>성격 차이를 이유로 이혼. 그러나 진짜 이유는 "대화가 통하지 않는" 소통 단절이었다. 남편의 입장에서 매일 쏟아지는 잔소리와 자기 중심적 대화는 한계였을 것이다.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>아들과의 결별</h4>
+      <p>아들이 돈 문제로 갈등을 빚은 이후 인연 끊음 선언. CCTV까지 설치하며 "얼씬도 하지 말라"고 공개 발언. 그러나 그 이면에는 어린 시절 시어머니 구박을 아들에게 화풀이한 뿌리가 있었다.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>딸과의 갈등·단절</h4>
+      <p>아들에 이어 딸과도 인연을 끊는 상황에 이름. 자녀 모두와 관계 단절. 이 시점에서 객관적 진단은 명확해진다 — 패턴의 주체는 본인이다.</p>
+    </div>
+    <div class="timeline-item">
+      <h4>무당 상담 — 그리고 동문서답</h4>
+      <p>내 편을 찾아 무당을 찾아갔으나, 무당조차 객관적 진실을 직면시키자 "무당이 한복 입고 영어 하는 게 웃겨요"라며 화제를 돌림. 무당 입에서 "Oh my God"이 절로 나옴.</p>
+    </div>
+  </div>
+
+  <div class="blockquote">
+    <p>"한 번은 실수지만, 이게 잦아지면 누구 잘못이다."<br>
+    남편과도, 아들과도, 딸과도 모두 관계가 끊겼다면<br>공통 변수는 결국 한 사람이다.</p>
+    <cite>— 언행심리 마스터 진단 中</cite>
+  </div>
+
+  <div class="divider">핵심 진단</div>
+
+  <!-- DIAGNOSIS -->
+  <div class="chapter">
+    <span class="chapter-num">Chapter 03</span>
+    <h2>7가지 <span class="point">심리 진단</span></h2>
+  </div>
+
+  <div class="diag-item">
+    <h3><span class="num">1</span>자기객관화 완전 부재</h3>
+    <p>자신이 어떻게 보이는지, 자신의 말과 행동이 상대에게 어떤 영향을 미치는지 인식하지 못한다. 문제가 반복될 때 "내가 문제일 수 있다"는 가능성 자체를 닫아두고 있다.</p>
+    <div class="evidence">방송에서 아들 문제를 공개적으로 말하면서도 "아들이 잘못"이라고 일관함. 무당 앞에서 잠깐 인정했다가 카메라 앞에서 다시 번복.</div>
+  </div>
+
+  <div class="diag-item">
+    <h3><span class="num">2</span>분노의 전이 (Displacement)</h3>
+    <p>시어머니에게 받은 구박과 스트레스를 해결하지 못하고, 약자인 아들에게 전이시켜 화풀이했다. 이는 심리적으로 매우 흔하면서도 파괴적인 패턴이다. 문제의 원점(시어머니)을 해결하지 못하니 엉뚱한 대상(아들)이 희생양이 됐다.</p>
+    <div class="evidence">무당 앞에서 직접 인정: "시어머니한테 구박받은 걸 왜 아들한테 화풀이했는지 모르겠어요."</div>
+  </div>
+
+  <div class="diag-item">
+    <h3><span class="num">3</span>방어기제 — 회피와 희화화</h3>
+    <p>불편한 진실에 직면하면 무의식적으로 화제를 돌리거나 웃음으로 넘긴다. 이것은 단순한 버릇이 아니라, 심리적 고통을 회피하기 위한 방어기제가 자동화된 상태다. 문제를 해결하는 능력이 아니라 회피하는 능력이 발달한 것이다.</p>
+    <div class="evidence">무당이 아들 관계의 핵심을 짚자 "무당이 한복 입고 영어로 오마이갓 하니까 웃겨요"라며 웃음으로 전환.</div>
+  </div>
+
+  <div class="diag-item">
+    <h3><span class="num">4</span>사랑의 언어 불일치 — 물질 = 사랑의 착각</h3>
+    <p>음식과 재산, 돈을 제공하는 것이 곧 사랑이라고 믿는다. 그래서 상대가 정서적 교감을 원할 때 진수성찬을 내민다. 상대는 마음이 고프고, 본인은 밥상을 차린다. 이 어긋남이 모든 관계 단절의 핵심 원인 중 하나다.</p>
+    <div class="evidence">"내가 진수성찬 차려줬는데, 잘 먹이고 돈도 줬는데 뭐가 불만이냐"는 논리로 남편·자식 문제를 바라봄.</div>
+  </div>
+
+  <div class="diag-item">
+    <h3><span class="num">5</span>만성적 피해의식 — '억울한 사춘기'</h3>
+    <p>항상 자신이 억울한 피해자라는 내러티브를 유지한다. 이는 책임을 회피하는 인지적 방어막이다. "내가 잘못했을 수 있다"를 인정하면 자아가 붕괴될 것 같은 두려움이 있기 때문에, 영원히 피해자 프레임을 유지한다. 이를 정서적 미성숙이라 부른다 — 몸은 어른이지만 감정 처리는 사춘기 수준에 멈춰 있는 것이다.</p>
+    <div class="evidence">"항상 자기가 억울하다고 방송에서 말한다." 아들에게 화풀이한 것을 인정한 뒤에도 방송에서 "아들이 잘못했다"고 발언.</div>
+  </div>
+
+  <div class="diag-item">
+    <h3><span class="num">6</span>역지사지 불가 — 공감 능력의 마비</h3>
+    <p>머리로는 "아들이 힘들었겠구나"를 인정하지만, 가슴으로는 체감하지 못한다. 진정한 공감은 상대의 감정을 내 것처럼 느끼는 능력이다. 이것이 마비된 상태에서는 반성이 행동으로 이어지지 않는다. 인정과 변화 사이의 다리가 끊겨 있다.</p>
+    <div class="evidence">무당이 "아들이 그동안 힘들었을 것"이라 하자 잠깐 인정하다가, "잘 될까요?"를 묻고 '내 편이 아니다'며 무당도 밀어냄.</div>
+  </div>
+
+  <div class="diag-item">
+    <h3><span class="num">7</span>소통 불능 — 동문서답의 자동화</h3>
+    <p>대화가 자신에게 불리한 방향으로 흐르면 엉뚱한 주제로 이탈한다. 이것이 반복되면 상대방은 대화 자체를 포기하게 된다. 남편, 아들, 딸, 무당까지 — 모두 "대화가 안 된다"는 결론에 도달한 이유가 여기 있다.</p>
+    <div class="evidence">무당 입에서 "Oh my God"이 나옴. "반찬 가짓수 갖고 얘기하면서 잔소리 심한" 소통 패턴에 남편도 속이 터졌을 것.</div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="chapter">
+    <span class="chapter-num">Chapter 04</span>
+    <h2>종합 <span class="point">진단표</span></h2>
+  </div>
+
+  <table class="diag-table">
+    <thead>
+      <tr>
+        <th>진단 항목</th>
+        <th>상태</th>
+        <th>핵심 원인</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>자기객관화</td>
+        <td class="status-bad">❌ 완전 부재</td>
+        <td>자아 방어기제의 자동화</td>
+      </tr>
+      <tr>
+        <td>역지사지 (공감)</td>
+        <td class="status-bad">❌ 불가</td>
+        <td>정서 발달의 정체</td>
+      </tr>
+      <tr>
+        <td>소통 능력</td>
+        <td class="status-bad">❌ 동문서답 반복</td>
+        <td>회피형 방어기제</td>
+      </tr>
+      <tr>
+        <td>감정 처리</td>
+        <td class="status-bad">❌ 전이·투사</td>
+        <td>분노의 대상 착각</td>
+      </tr>
+      <tr>
+        <td>책임 귀인</td>
+        <td class="status-bad">❌ 항상 외부 탓</td>
+        <td>피해의식 고착</td>
+      </tr>
+      <tr>
+        <td>정서적 성숙도</td>
+        <td class="status-bad">❌ 사춘기 수준</td>
+        <td>어린 시절 상처 미해결</td>
+      </tr>
+      <tr>
+        <td>사랑 표현 방식</td>
+        <td class="status-key">⚠️ 물질 중심</td>
+        <td>사랑의 언어 불일치</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider">자가진단</div>
+
+  <!-- CHECKLIST -->
+  <div class="chapter">
+    <span class="chapter-num">Chapter 05</span>
+    <h2>나는 괜찮은가 — <span class="point">자가진단 체크리스트</span></h2>
+  </div>
+
+  <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1.5rem;">
+    아래 항목에서 해당되는 것에 체크해 보세요. <strong>솔직하게</strong> 답할수록 정확합니다.
+  </p>
+
+  <div class="checklist">
+    <h3>🔍 <span>자기객관화 부재</span> 자가진단 10항목</h3>
+
+    <div class="check-item"><div class="check-box"></div><span>가까운 사람과의 갈등이 반복될 때, 먼저 "내가 문제일 수 있다"고 생각하기보다 "저 사람이 문제다"고 생각한다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>누군가가 나에게 쓴소리를 하면, 내용보다 "왜 저렇게 말하지"에 더 집중된다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>내가 억울하다는 감정이 자주, 오래 지속된다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>대화 중 불편한 주제가 나오면 다른 얘기로 넘기거나 웃음으로 덮는다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>나는 충분히 해줬는데 상대가 감사할 줄 모른다고 느낀 적이 자주 있다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>한 사람이 아니라, 여러 사람과 비슷한 이유로 갈등을 겪었다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>상대방이 왜 서운한지 이해가 잘 안 되고, 오히려 내가 더 서운할 때가 많다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>나에게 동의해 주지 않는 사람은 "내 편이 아니다"고 느낀다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>사과를 하고 나서도 "근데 원래는 상대방이 잘못한 거야"라는 생각이 남는다.</span></div>
+    <div class="check-item"><div class="check-box"></div><span>소통이 막힐 때 대화로 풀기보다 관계를 끊거나 거리를 두는 쪽을 선택한다.</span></div>
+
+    <div class="check-score">
+      <strong>0~2개:</strong> 건강한 자기인식 수준. 꾸준히 유지하세요.<br>
+      <strong>3~5개:</strong> 경계선. 특정 관계에서 패턴을 점검할 필요가 있습니다.<br>
+      <strong>6~8개:</strong> 자기객관화에 어려움이 있습니다. 신뢰할 수 있는 사람의 피드백을 적극 수용해야 합니다.<br>
+      <strong>9~10개:</strong> 지금 당장 변화가 필요한 단계. 아래 처방을 주의 깊게 읽으세요.
+    </div>
+  </div>
+
+  <div class="divider">처방</div>
+
+  <!-- PRESCRIPTION -->
+  <div class="chapter">
+    <span class="chapter-num">Chapter 06</span>
+    <h2>언행심리 마스터의 <span class="point">처방전</span></h2>
+  </div>
+
+  <div class="prescription">
+    <h3>Rx — 자기객관화 회복을 위한 5가지 처방</h3>
+
+    <div class="rx-item">
+      <div class="rx-num">1</div>
+      <span><strong style="color:#8fc87a">작은 소통의 습관화.</strong> 오늘 기분이 어땠는지, 무엇이 불만이었는지 — 작은 것부터 매일 말하고 듣는 연습을 하라. 큰 갈등의 폭발은 모두 작은 소통의 막힘이 쌓인 결과다. 둑이 무너지기 전에 작은 물꼬를 틔워야 한다.</span>
+    </div>
+    <div class="rx-item">
+      <div class="rx-num">2</div>
+      <span><strong style="color:#8fc87a">불편한 피드백을 버티는 훈련.</strong> 누군가 쓴소리를 할 때, 즉각 반박하거나 다른 데로 튀기 전에 3초를 멈추라. "저 말이 맞을 수 있다"는 가능성을 1%라도 열어두는 것 — 이것이 자기객관화의 시작이다.</span>
+    </div>
+    <div class="rx-item">
+      <div class="rx-num">3</div>
+      <span><strong style="color:#8fc87a">분노의 출처를 거슬러 올라가라.</strong> 지금 화가 나는 대상이, 진짜 분노의 원인인지 점검하라. 시어머니 스트레스가 아들에게 간 것처럼, 분노는 자주 엉뚱한 곳에 내려앉는다. 진짜 상처와 지금의 반응을 분리하는 작업이 필요하다.</span>
+    </div>
+    <div class="rx-item">
+      <div class="rx-num">4</div>
+      <span><strong style="color:#8fc87a">사랑의 언어를 상대에게 맞춰라.</strong> 내가 주고 싶은 방식(밥, 돈, 물질)이 아니라, 상대가 받고 싶은 방식(대화, 인정, 공감)으로 사랑을 표현해야 한다. "나는 다 해줬는데"는 착각일 수 있다. 상대의 그릇에 맞는 것을 담아야 한다.</span>
+    </div>
+    <div class="rx-item">
+      <div class="rx-num">5</div>
+      <span><strong style="color:#8fc87a">자기 인정이 먼저다.</strong> 자기객관화는 자기 비하가 아니다. "나도 힘들었고, 잘못도 있었다"를 동시에 인정하는 것이다. 자신을 인정하는 순간, 비로소 잘못도 보이고, 반성이 생기고, 관계가 풀린다. 방어막을 내려놓는 것이 약함이 아니라 용기다.</span>
+    </div>
+  </div>
+
+  <!-- WARNING -->
+  <div class="warning-box">
+    <div class="warn-title">⚠️ 변화가 가장 어려운 유형의 역설</div>
+    자기객관화가 안 되는 사람은 자신을 객관화시켜 줄 사람이 나타나도, 그 사람을 "내 편이 아니다"라며 밀어낸다.
+    무당도, 가족도, 친구도 모두 그렇게 밀려났다. 이 역설을 깨는 유일한 방법은
+    외부의 조언이 아니라 <strong>스스로 바닥을 경험하는 것</strong>이다.
+    지금 이 글이 그 바닥이 오기 전에 읽히기를 바란다.
+  </div>
+
+  <div class="divider">결론</div>
+
+  <!-- CONCLUSION -->
+  <div class="chapter">
+    <span class="chapter-num">Conclusion</span>
+    <h2>이 사례가 우리에게 <span class="point">건네는 말</span></h2>
+  </div>
+
+  <p style="font-size:0.93rem; line-height:2.1; margin-bottom:1.5rem;">
+    빅마마의 이야기는 특별한 사람의 특별한 실패가 아닙니다.<br>
+    정도의 차이는 있지만, 우리 주변 어디에나 — 때로는 우리 자신 안에도 — 이 패턴은 존재합니다.
+  </p>
+  <p style="font-size:0.93rem; line-height:2.1; margin-bottom:1.5rem;">
+    자기객관화는 자신을 낮추는 것이 아닙니다.<br>
+    <strong>자신을 있는 그대로 보는 용기</strong>입니다.<br>
+    그 용기가 생기는 순간, 비로소 관계가 살아나고 삶이 달라집니다.
+  </p>
+
+  <div class="blockquote">
+    <p>"자기 자신을 인정하게 만들면 자기 자신을 바로 보게 된다.<br>
+    그러면 내 잘못도 보게 되고, 인정하는 순간 반성이 생기고,<br>
+    반성이 있으면 풀어지는 것이 생긴다."</p>
+    <cite>— 언행심리 마스터 분석 中</cite>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <strong>인간분석 사례연구 시리즈</strong><br>
+    대한민국 1호 언행심리 마스터<br><br>
+    이 콘텐츠는 교육 및 사회적 계몽을 목적으로 제작되었습니다.<br>
+    무단 전재 및 복제를 금합니다.
+  </div>
+</footer>
+
+</body>
+</html>
